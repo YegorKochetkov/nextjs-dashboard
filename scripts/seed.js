@@ -12,7 +12,7 @@ async function seedUsers(client) {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
     // Create the "users" table if it doesn't exist
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE IF NOT EXISTS users_nextjs_dashboard (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email TEXT NOT NULL UNIQUE,
@@ -20,14 +20,14 @@ async function seedUsers(client) {
       );
     `;
 
-    console.log(`Created "users" table`);
+    console.log(`Created "users_nextjs_dashboard" table`);
 
-    // Insert data into the "users" table
+    // Insert data into the "users_nextjs_dashboard" table
     const insertedUsers = await Promise.all(
       users.map(async (user) => {
         const hashedPassword = await bcrypt.hash(user.password, 10);
         return client.sql`
-        INSERT INTO users (id, name, email, password)
+        INSERT INTO users_nextjs_dashboard (id, name, email, password)
         VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
         ON CONFLICT (id) DO NOTHING;
       `;
@@ -50,9 +50,9 @@ async function seedInvoices(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-    // Create the "invoices" table if it doesn't exist
+    // Create the "invoices_nextjs_dashboard" table if it doesn't exist
     const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS invoices (
+    CREATE TABLE IF NOT EXISTS invoices_nextjs_dashboard (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     customer_id UUID NOT NULL,
     amount INT NOT NULL,
@@ -61,13 +61,13 @@ async function seedInvoices(client) {
   );
 `;
 
-    console.log(`Created "invoices" table`);
+    console.log(`Created "invoices_nextjs_dashboard" table`);
 
-    // Insert data into the "invoices" table
+    // Insert data into the "invoices_nextjs_dashboard" table
     const insertedInvoices = await Promise.all(
       invoices.map(
         (invoice) => client.sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
+        INSERT INTO invoices_nextjs_dashboard (customer_id, amount, status, date)
         VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date})
         ON CONFLICT (id) DO NOTHING;
       `,
@@ -90,9 +90,9 @@ async function seedCustomers(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-    // Create the "customers" table if it doesn't exist
+    // Create the "customers_nextjs_dashboard" table if it doesn't exist
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS customers (
+      CREATE TABLE IF NOT EXISTS customers_nextjs_dashboard (
         id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
@@ -100,13 +100,13 @@ async function seedCustomers(client) {
       );
     `;
 
-    console.log(`Created "customers" table`);
+    console.log(`Created "customers_nextjs_dashboard" table`);
 
-    // Insert data into the "customers" table
+    // Insert data into the "customers_nextjs_dashboard" table
     const insertedCustomers = await Promise.all(
       customers.map(
         (customer) => client.sql`
-        INSERT INTO customers (id, name, email, image_url)
+        INSERT INTO customers_nextjs_dashboard (id, name, email, image_url)
         VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
         ON CONFLICT (id) DO NOTHING;
       `,
@@ -127,21 +127,21 @@ async function seedCustomers(client) {
 
 async function seedRevenue(client) {
   try {
-    // Create the "revenue" table if it doesn't exist
+    // Create the "revenue_nextjs_dashboard" table if it doesn't exist
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS revenue (
+      CREATE TABLE IF NOT EXISTS revenue_nextjs_dashboard (
         month VARCHAR(4) NOT NULL UNIQUE,
         revenue INT NOT NULL
       );
     `;
 
-    console.log(`Created "revenue" table`);
+    console.log(`Created "revenue_nextjs_dashboard" table`);
 
     // Insert data into the "revenue" table
     const insertedRevenue = await Promise.all(
       revenue.map(
         (rev) => client.sql`
-        INSERT INTO revenue (month, revenue)
+        INSERT INTO revenue_nextjs_dashboard (month, revenue)
         VALUES (${rev.month}, ${rev.revenue})
         ON CONFLICT (month) DO NOTHING;
       `,
